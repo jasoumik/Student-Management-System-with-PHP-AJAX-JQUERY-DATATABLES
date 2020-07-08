@@ -1,0 +1,36 @@
+$(document).ready(function(){
+    $('#teacher_login_form').on('submit',function(event){
+    event.preventDefault();
+    $.ajax({
+       url:"check_teacher_login.php",
+       method:"POST",
+       data:$(this).serialize(),
+       dataType:"json",
+       beforeSend:function(){
+           $('#teacher_login').val('Validate...');
+           $('#teacher_login').attr('disabled','disabled');
+       },
+       success:function(data){
+           if(data.success){
+               location.href="new_index.php";
+           }
+           if(data.error){
+               $('#teacher_login').val('Login');
+               $('#teacher_login').attr('disabled',false);
+               if(data.error_teacher_emailid!=''){
+                  $('#error_teacher_emailid').text(data.error_teacher_emailid);
+               }
+               else{
+                   $('#error_teacher_emailid').text('');
+               }
+               if(data.error_teacher_password!=''){
+                 $('#error_teacher_password').text(data.error_teacher_password);
+               }
+               else{
+                 $('error_teacher_password').text('');
+               }
+           }
+       }
+    })
+    });
+});
